@@ -10,6 +10,7 @@ import RenderList from "../components/RenderList"
 const SearchScreen = () => {
    const [search , setSearch] = useState("");
    const[searchApi, results, errormessage ,  loading] = useResults();
+  
    
 
     useEffect( () => {
@@ -64,17 +65,19 @@ const SearchScreen = () => {
          />
 
         {errormessage ? <Text style={{marginLeft : 15}}>{errormessage}</Text> : null }
-       {results.length > 0 ?  <Text style={{marginLeft : 15, marginBottom : 10, fontWeight : "bold", color : "red"}}>We have found {results.length} results!</Text> : null}
+       {results.length >= 0 && !loading?  <Text style={{marginLeft : 15, marginBottom : 10, fontWeight : "bold", color : "red"}}>We have found {results.length} results!</Text> : null}
         
 
-        {loading ? <View><DotIndicator color='orange' /></View>  : <ScrollView>
+        {loading  ? <View ><DotIndicator color='orange' /></View>  :  <ScrollView>
           <RenderList value={filterByPrices("$")} title="Cost Effective"  />  
            <RenderList value={filterByPrices("$$")} title="Bit Pricier"  />
        <RenderList value={filterByPrices("$$$")} title="Big Spender" />
 
-        </ScrollView> }
+        </ScrollView>} 
 
-        {results.length === 0 ? <Text>Enter Correct Info</Text> : null}
+      
+
+        
         
     
         

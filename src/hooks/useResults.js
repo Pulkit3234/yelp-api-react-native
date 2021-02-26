@@ -27,9 +27,10 @@ const SearchResults = () => {
         
 
         //console.log(response.data.businesses);
-        if(response) {
+        /*if(response) {
             setLoading(false);
-        }
+        } */
+        setLoading(false);
         setResults(response.data.businesses);
 
     }
