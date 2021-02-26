@@ -6,11 +6,15 @@ import yelp from "../api/yelp";
 const SearchResults = () => {
      const[errormessage, setError] = useState(""); 
     const[results, setResults] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    
     
     
 
 
     const searchApi = async (term) => {
+        setLoading(true);
         try{
         const response = await yelp.get("/search", {
             params : {
@@ -19,7 +23,15 @@ const SearchResults = () => {
                 location : "georgia"
             }
         });
+
+        
+
+        //console.log(response.data.businesses);
+        if(response) {
+            setLoading(false);
+        }
         setResults(response.data.businesses);
+
     }
     catch(err){
         setError("Something Went Wrong");
@@ -30,7 +42,7 @@ const SearchResults = () => {
 
    
 
-    return [searchApi, results, errormessage];
+    return [searchApi, results, errormessage, loading];
 
 }
 

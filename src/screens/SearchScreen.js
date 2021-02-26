@@ -1,5 +1,6 @@
 import React, { useEffect } from "react"; 
-import {View, StyleSheet, Text, ScrollView} from "react-native";
+import {View, StyleSheet, Text, ScrollView, ActivityIndicator} from "react-native";
+import {DotIndicator} from 'react-native-indicators'
 import {SearchBar} from "react-native-elements";
 import {useState} from "react";
 import useResults from "../hooks/useResults";
@@ -7,17 +8,35 @@ import RenderList from "../components/RenderList"
 
 
 const SearchScreen = () => {
-const [search , setSearch] = useState("");
+   const [search , setSearch] = useState("");
+   const[searchApi, results, errormessage ,  loading] = useResults();
    
 
-   const[searchApi, results, errormessage ] = useResults();
+    useEffect( () => {
 
-    useEffect(() => {
+        console.log(search);
 
-        searchApi("pasta");
+       
+
+      const app =  () => {
+          
+         
+   search === '' ?  searchApi('pasta') :  searchApi(search);
+
+ 
+ }
 
 
-    }, []);
+       app();
+
+       //
+
+       //searchApi('pasta');
+    
+    
+    }, [search]);
+
+
 
     const filterByPrices= (price) => {
       return results.filter(result => {
@@ -33,21 +52,31 @@ const [search , setSearch] = useState("");
             <SearchBar 
             
              placeholder="Type Here..."
-        onChangeText={(value) => setSearch(value)}
+        onChangeText={(value) => {
+           setSearch(value);
+            //searchApi(value);
+        } }
         value={search} 
         round
         lightTheme
         cancelIcon
-        onEndEditing={() => searchApi(search)}  />
+        onEndEditing = {() => searchApi(search)}
+         />
 
         {errormessage ? <Text style={{marginLeft : 15}}>{errormessage}</Text> : null }
-        <Text style={{marginLeft : 15, marginBottom : 10, fontWeight : "bold", color : "red"}}>We have found {results.length} results!</Text>
-        {results.length === 0 ? <Text style={{marginLeft : 15, fontWeight : "bold", color : "green"}}>Enter Correct Info</Text> : <ScrollView>
-            <RenderList value={filterByPrices("$")} title="Cost Effective"  />
-       <RenderList value={filterByPrices("$$")} title="Bit Pricier"  />
-       <RenderList value={filterByPrices("$$$")} title="Big Spender" /> 
+       {results.length > 0 ?  <Text style={{marginLeft : 15, marginBottom : 10, fontWeight : "bold", color : "red"}}>We have found {results.length} results!</Text> : null}
+        
+
+        {loading ? <View><DotIndicator color='orange' /></View>  : <ScrollView>
+          <RenderList value={filterByPrices("$")} title="Cost Effective"  />  
+           <RenderList value={filterByPrices("$$")} title="Bit Pricier"  />
+       <RenderList value={filterByPrices("$$$")} title="Big Spender" />
 
         </ScrollView> }
+
+        {results.length === 0 ? <Text>Enter Correct Info</Text> : null}
+        
+    
         
         </>
      
@@ -76,3 +105,9 @@ const styles = StyleSheet.create({
 })
 
 export default SearchScreen;
+/*{results.length === 0  ? <Text style={{marginLeft : 15, fontWeight : "bold", color : "green"}}>Enter Correct Info</Text> : <ScrollView>
+          <RenderList value={filterByPrices("$")} title="Cost Effective"  />  
+           <RenderList value={filterByPrices("$$")} title="Bit Pricier"  />
+       <RenderList value={filterByPrices("$$$")} title="Big Spender" />
+
+        </ScrollView> }  */

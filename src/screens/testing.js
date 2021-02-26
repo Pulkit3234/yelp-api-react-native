@@ -3,15 +3,16 @@ import React from "react"
 const COLOR_INCREMENT = 15;
 const reducer = (state, action) => {
 
-    switch (action.type)
-    case "increase"
+    switch (action.type){
+    case "increase":
     return {...state, count : state.count + action.payload};
-    case "decrease"
+    case "decrease":
     return {...state, count : state.count - action.payload};
     
     
     default :
     return state;
+    }
 
 
 };
